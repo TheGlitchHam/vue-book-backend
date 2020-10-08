@@ -46,10 +46,3 @@ def update_book(book):
                                book.get("author"), book.get("read"), book.get("id")))
     conn.commit()
     return "Successfully updated book"
-
-
-def test_book():
-    book = {"title": "dinges", "author": "testauth", "read": "True", "id": "1"}
-
-    print(update_book(book))
-    print(get_all_books())
