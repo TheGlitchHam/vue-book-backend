@@ -15,27 +15,41 @@ def get_connection():
 
 
 def get_all_books():
-    pass
+    cursor.execute("SELECT * FROM book")
+    book_list = cursor.fetchall()
+    return book_list
 
 
-def get_book_by_id():
-    pass
+def get_book_by_id(bookID):
+    cursor.execute("SELECT * FROM book where id = ?", (bookID))
+    book = cursor.fetchone()
+    return book
 
 
 def add_book_db(book):
-    curser.execute(
+    cursor.execute(
         "INSERT INTO book(title, author, read) VALUES (?, ?, ?)", (book.get("title"), book.get("author"), book.get("read")))
-    return "success"
+    conn.commit()
+    return "Added book to Database"
 
 
 def delete_book(bookID):
-    pass
+    sql_query = "DELETE from book where id = ?"
+    cursor.execute(sql_query, (bookID))
+    conn.commit()
+    return "Book deleted Successfully"
 
 
 def update_book(book):
-    clearpass
+    sql_query = "UPDATE book SET title = ? , author = ? , read = ? WHERE id = ? "
+    cursor.execute(sql_query, (book.get("title"),
+                               book.get("author"), book.get("read"), book.get("id")))
+    conn.commit()
+    return "Successfully updated book"
 
 
-def test_add_book():
-    book = {"title": "testtitle", "author": "testauthor", "read": "false"}
-    add_book_db(book)
+def test_book():
+    book = {"title": "dinges", "author": "testauth", "read": "True", "id": "1"}
+
+    print(update_book(book))
+    print(get_all_books())
