@@ -6,8 +6,11 @@ cursor = conn.cursor()
 
 
 def init_db():
-    sql_query = "CREATE TABLE book( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL, read BOOLEAN DEFAULT false)"
-    cursor.execute(sql_query)
+    try:
+        sql_query = "CREATE TABLE book( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL, read BOOLEAN DEFAULT false)"
+        cursor.execute(sql_query)
+    except sqlite3.Error as error:
+        print("Error executing init script", error)
 
 
 def get_connection():
@@ -15,41 +18,60 @@ def get_connection():
 
 
 def get_all_books():
-    cursor.execute("SELECT * FROM book")
-    book_list = cursor.fetchall()
+    book_list = []
+    try:
+        cursor.execute("SELECT * FROM book")
+        book_list.extend(cursor.fetchall())
+    except sqlite3.Error as error:
+        print("Error loading all books", error)
     return book_list
 
 
 def get_book_by_id(bookID):
-    cursor.execute("SELECT * FROM book where id = ?", (bookID))
-    book = cursor.fetchone()
+    book
+    try:
+        cursor.execute("SELECT * FROM book where id = ?", (bookID))
+        book = cursor.fetchone()
+    except sqlite3.Error as error:
+        print("Error loading book", error)
     return book
 
 
 def add_book_db(book):
-    cursor.execute(
-        "INSERT INTO book(title, author, read) VALUES (?, ?, ?)", (book.get("title"), book.get("author"), book.get("read")))
-    conn.commit()
-    return "Added book to Database"
+    message
+    try:
+        cursor.execute(
+            "INSERT INTO book(title, author, read) VALUES (?, ?, ?)", (book.get("title"), book.get("author"), book.get("read")))
+        conn.commit()
+        message = "Added book to Database"
+    except sqlite3.Error as error:
+        print("Error adding book", error)
+        message = ("Error: could not add book")
+    return message
 
 
 def delete_book(bookID):
-    sql_query = "DELETE from book where id = ?"
-    cursor.execute(sql_query, (bookID))
-    conn.commit()
-    return "Book deleted Successfully"
+    message
+    try:
+        sql_query = "DELETE from book where id = ?"
+        cursor.execute(sql_query, (bookID))
+        conn.commit()
+        message = "Deleted book successfully"
+    except sqlite3.Error as error:
+        print("Error delete book", error)
+        message = ("Error: could not delete book")
+    return message
 
 
 def update_book(book):
-    sql_query = "UPDATE book SET title = ? , author = ? , read = ? WHERE id = ? "
-    cursor.execute(sql_query, (book.get("title"),
-                               book.get("author"), book.get("read"), book.get("id")))
-    conn.commit()
-    return "Successfully updated book"
-
-
-def test_book():
-    book = {"title": "dinges", "author": "testauth", "read": "True", "id": "1"}
-
-    print(update_book(book))
-    print(get_all_books())
+    message
+    try:
+        sql_query = "UPDATE book SET title = ? , author = ? , read = ? WHERE id = ? "
+        cursor.execute(sql_query, (book.get("title"),
+                                   book.get("author"), book.get("read"), book.get("id")))
+        conn.commit()
+        message = "Successfully updated book"
+    except sqlite3.Error as error:
+        print("Error updating book", error)
+        message = ("Error: could not update book")
+    return message
