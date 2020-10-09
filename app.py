@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import uuid
+import db
 
 
 # conf
@@ -37,7 +38,8 @@ def all_books():
         response_object['message'] = 'Book added!'
 
     else:
-        response_object['books'] = BOOKS
+       # response_object['books'] = BOOKS
+        response_object['books'] = db.get_all_books()
     return jsonify(response_object)
 
 
