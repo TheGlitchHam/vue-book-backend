@@ -1,5 +1,14 @@
 import sqlite3
 
+# facotry method for building dicts from sqlite3.Row
+
+
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
 
 def init_db():
     with sqlite3.connect('books.sqlite ') as conn:
@@ -15,8 +24,9 @@ def get_all_books():
     book_list = []
     with sqlite3.connect('books.sqlite ') as conn:
         try:
+            conn.row_factory = dict_factory
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM book")
+            cursor.execute("SELECT id, title, author, read FROM book")
             book_list.extend(cursor.fetchall())
         except sqlite3.Error as error:
             print("Error loading all books", error)
@@ -27,6 +37,7 @@ def get_book_by_id(bookID):
     book = ()
     with sqlite3.connect('books.sqlite ') as conn:
         try:
+            conn.row_factory = dict_factory
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM book where id = ?", (bookID))
             book = cursor.fetchone()
