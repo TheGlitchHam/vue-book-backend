@@ -2,6 +2,7 @@
 .env
 crudenv
 vueenv
+*.sqlite
 *.pyc
 *.pyo
 env/
